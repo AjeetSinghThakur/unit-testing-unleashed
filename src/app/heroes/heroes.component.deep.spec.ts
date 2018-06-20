@@ -62,4 +62,17 @@ describe('Hero Component(deep test)', () => {
         heroComponentDEs[0].triggerEventHandler('delete', null);
         expect(fixture.componentInstance.delete).toHaveBeenCalledWith(HEROES[0]);
     });
+    it(`should add new hero to hero list when add button is clicked`, () => {
+        mockHeroService.getHeroes.and.returnValue(of(HEROES));
+        fixture.detectChanges();
+        const name = 'Superman';
+        mockHeroService.addHero.and.returnValue(of({ id: 5, name: name, strength: 5 }));
+        const inputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+        const addButton = fixture.debugElement.queryAll(By.css('button'))[0];
+        inputElement.value = name;
+        addButton.triggerEventHandler('click', null);
+        fixture.detectChanges();
+        const heroText = fixture.debugElement.query(By.css('ul')).nativeElement.textContent;
+        expect(heroText).toContain(name);
+    });
 });
