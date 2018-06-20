@@ -41,4 +41,25 @@ describe('Hero Component(deep test)', () => {
             expect(heroComponentDEs[i].componentInstance.hero).toEqual(HEROES[i]);
         }
     });
+    it(`should call heroService.deleteHero when the Hero Component's
+    delete button is called`, () => {
+        spyOn(fixture.componentInstance, 'delete');
+        mockHeroService.getHeroes.and.returnValue(of(HEROES));
+        fixture.detectChanges();
+        const heroComponentDEs = fixture.debugElement.queryAll(By.directive(HeroComponent));
+        heroComponentDEs[0].query(By.css('button'))
+        .triggerEventHandler('click', { stopPropagation: () => {} });
+        expect(fixture.componentInstance.delete).toHaveBeenCalledWith(HEROES[0]);
+    });
+    it(`should call heroService.deleteHero when the Hero Component's
+    delete button is called : Same as above just rewritting in different style`, () => {
+        spyOn(fixture.componentInstance, 'delete');
+        mockHeroService.getHeroes.and.returnValue(of(HEROES));
+        fixture.detectChanges();
+        const heroComponentDEs = fixture.debugElement.queryAll(By.directive(HeroComponent));
+        // (<HeroComponent>heroComponentDEs[0].componentInstance).delete.emit(undefined);
+        // Same line of code will do the similar operations.
+        heroComponentDEs[0].triggerEventHandler('delete', null);
+        expect(fixture.componentInstance.delete).toHaveBeenCalledWith(HEROES[0]);
+    });
 });
